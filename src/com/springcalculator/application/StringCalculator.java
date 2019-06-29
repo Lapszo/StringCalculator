@@ -1,20 +1,29 @@
 package com.springcalculator.application;
 
-
+import java.util.List;
+import static java.util.Arrays.asList;
 
 public class StringCalculator {
 
     public int add(String numbers) {
-        if(numbers.isEmpty())
-        {
+        if(numbers.isEmpty()) {
             return 0;
-        } else if(numbers.contains(",")) {
-            String[] separated = numbers.split(",");
-            return Integer.parseInt(separated[0]) + Integer.parseInt(separated[1]);
-        }
-        else {
-            return Integer.parseInt(numbers);
+        } else
+        {
+            List<String> numbersList = getNumbers(numbers);
+            return sum(numbersList);
         }
     }
+
+    private int sum(List<String> numbersList) {
+        return numbersList.stream()
+                .mapToInt(Integer::parseInt)
+                .sum();
+    }
+
+    private List<String> getNumbers(String text) {
+       return asList(text.split(","));
+    }
+
 
 }

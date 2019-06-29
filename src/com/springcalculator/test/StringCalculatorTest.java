@@ -26,8 +26,26 @@ public class StringCalculatorTest {
     }
 
     @Test
-    public void shouldReturnSumOnTwoNumber(){
+    public void shouldReturnSumOnTwoNumbers(){
         assertThat(stringCalculator.add("1,2")).isEqualTo(3);
     }
 
+    @Test
+    public void shouldReturnSumOnMultipleNumbers(){
+        assertThat(stringCalculator.add("1,2,3")).isEqualTo(6);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgumentExceptionOnLackOfOneArgument() {
+        stringCalculator.add("1,,3");
+    }
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgumentExceptionOnOneArgumentIsNotNumber() {
+        stringCalculator.add("1,s,3");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgumentExceptionOnComaAsFirstCharacter() {
+        stringCalculator.add(",1,2,3");
+    }
 }
