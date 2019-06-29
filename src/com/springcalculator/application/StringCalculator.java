@@ -22,8 +22,15 @@ public class StringCalculator {
     }
 
     private List<String> getNumbers(String text) {
-       return asList(text.split(","));
+        String delimiters = getDelimiters(text);
+        return separateNumbers(text, delimiters);
+    }
+    private String getDelimiters(String text) {
+        String delimiters = ",|\n";
+        return delimiters;
     }
 
-
+    private List<String> separateNumbers(String text, String delimiters) {
+        return asList(text.split(delimiters));
+    }
 }

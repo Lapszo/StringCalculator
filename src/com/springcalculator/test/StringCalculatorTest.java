@@ -48,4 +48,16 @@ public class StringCalculatorTest {
     public void shouldThrowIllegalArgumentExceptionOnComaAsFirstCharacter() {
         stringCalculator.add(",1,2,3");
     }
+    @Test
+    public void shouldReturnSumOnDelimitersAreComasAndNewLines()
+    {
+        assertThat(stringCalculator.add("1,2\n3")).isEqualTo(6);
+        assertThat(stringCalculator.add("1\n2\n3")).isEqualTo(6);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgumentExceptionOnNewLineAsFirstCharacter() {
+        stringCalculator.add("\n1,2\n3");
+    }
+
 }
