@@ -8,7 +8,11 @@ public class StringCalculator {
         if(numbers.isEmpty())
         {
             return 0;
-        } else {
+        } else if(numbers.contains(",")) {
+            String[] separated = numbers.split(",");
+            return Integer.parseInt(separated[0]) + Integer.parseInt(separated[1]);
+        }
+        else {
             return Integer.parseInt(numbers);
         }
     }

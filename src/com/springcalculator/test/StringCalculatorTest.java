@@ -24,4 +24,10 @@ public class StringCalculatorTest {
     public void shouldReturnNumberOnOneNumber(){
         assertThat(stringCalculator.add("1")).isEqualTo(1);
     }
+
+    @Test
+    public void shouldReturnSumOnTwoNumber(){
+        assertThat(stringCalculator.add("1,2")).isEqualTo(3);
+    }
+
 }
