@@ -5,11 +5,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.joining;
 
 public class StringCalculator {
     private static final String START_OF_SQUARE_BRACKET = "\\[";
     private static final String EMPTY_STRING = "";
-    public static final int START_INDEX = 6;
+    private static final int START_INDEX = 6;
     private Pattern DelimitersValidator = Pattern.compile("//(\\[(\\D+)])+\n(.*)");
     private Matcher DelimitersMatcher;
 
@@ -18,17 +19,26 @@ public class StringCalculator {
             return 0;
         } else {
             List<String> numbersList = getNumbers(numbers);
+            checkNegativeNumbers(numbersList);
             return sum(numbersList);
         }
     }
 
+    private void checkNegativeNumbers(List<String> numbersList) {
+        String negatives = numbersList.stream()
+                .filter(s -> s.contains("-"))
+                .collect(joining(","));
+        if (!negatives.isEmpty()) {
+            throw new IllegalArgumentException("Negatives not allowed: " + negatives);
+        }
+    }
     private int sum(List<String> numbersList) {
         return numbersList.stream()
                 .mapToInt(Integer::parseInt)
                 .sum();
     }
 
-    List<String> getNumbers(String text) {
+    private List<String> getNumbers(String text) {
         String delimiters = getDelimiters(text);
         return separateNumbers(text, delimiters);
     }
@@ -45,8 +55,7 @@ public class StringCalculator {
         if (isDelimiterValid(string)) {
             String customDelimiter = DelimitersMatcher.group(1);
             String removeSquareBracket = removeBracket(customDelimiter);
-            String giveDelimiter = Pattern.quote(removeSquareBracket);
-            delimiters = giveDelimiter;
+            delimiters = Pattern.quote(removeSquareBracket);
         } else {
             delimiters = ",|\n";
         }

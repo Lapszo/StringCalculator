@@ -4,7 +4,7 @@ import com.springcalculator.application.StringCalculator;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 public class StringCalculatorTest {
 
@@ -65,5 +65,11 @@ public class StringCalculatorTest {
         assertThat(stringCalculator.add("//[*]\n1*2*3")).isEqualTo(6);
     }
 
-
+    @Test
+    public void shouldThrowIllegalArgumentExceptionOnNegativeNumbers() {
+        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> stringCalculator.add("-1,2,-3"))
+                .withMessage("Negatives not allowed: -1,-3");
+        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> stringCalculator.add("//[;]\n1;-2;3"))
+                .withMessage("Negatives not allowed: -2");
+    }
 }
