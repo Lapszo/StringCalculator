@@ -49,8 +49,7 @@ public class StringCalculatorTest {
         stringCalculator.add(",1,2,3");
     }
     @Test
-    public void shouldReturnSumOnDelimitersAreComasAndNewLines()
-    {
+    public void shouldReturnSumOnDelimitersAreComasAndNewLines() {
         assertThat(stringCalculator.add("1,2\n3")).isEqualTo(6);
         assertThat(stringCalculator.add("1\n2\n3")).isEqualTo(6);
     }
@@ -59,5 +58,12 @@ public class StringCalculatorTest {
     public void shouldThrowIllegalArgumentExceptionOnNewLineAsFirstCharacter() {
         stringCalculator.add("\n1,2\n3");
     }
+
+    @Test
+    public void shouldReturnSumOnSingleDelimiter() {
+        assertThat(stringCalculator.add("//[;]\n1;2;3;4;5;6")).isEqualTo(21);
+        assertThat(stringCalculator.add("//[*]\n1*2*3")).isEqualTo(6);
+    }
+
 
 }
