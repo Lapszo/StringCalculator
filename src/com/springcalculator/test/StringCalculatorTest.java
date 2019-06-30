@@ -72,4 +72,11 @@ public class StringCalculatorTest {
         assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> stringCalculator.add("//[;]\n1;-2;3"))
                 .withMessage("Negatives not allowed: -2");
     }
+
+    @Test
+    public void shouldReturnSumAndIgnoredNumbersBiggerThan1000() {
+        assertThat(stringCalculator.add("//[;]\n1;1001;2")).isEqualTo(3);
+        assertThat(stringCalculator.add("1,1001")).isEqualTo(1);
+    }
+
 }
