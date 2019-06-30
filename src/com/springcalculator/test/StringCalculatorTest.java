@@ -48,6 +48,7 @@ public class StringCalculatorTest {
     public void shouldThrowIllegalArgumentExceptionOnComaAsFirstCharacter() {
         stringCalculator.add(",1,2,3");
     }
+
     @Test
     public void shouldReturnSumOnDelimitersAreComasAndNewLines() {
         assertThat(stringCalculator.add("1,2\n3")).isEqualTo(6);
@@ -77,6 +78,18 @@ public class StringCalculatorTest {
     public void shouldReturnSumAndIgnoredNumbersBiggerThan1000() {
         assertThat(stringCalculator.add("//[;]\n1;1001;2")).isEqualTo(3);
         assertThat(stringCalculator.add("1,1001")).isEqualTo(1);
+    }
+
+    @Test
+    public void shouldReturnSumOnAnyLengthOfDelimiter() {
+        assertThat(stringCalculator.add("//[***]\n1***2***3")).isEqualTo(6);
+        assertThat(stringCalculator.add("//[;;]\n1;;2;;3")).isEqualTo(6);
+        assertThat(stringCalculator.add("//[*;]\n1*;2*;3")).isEqualTo(6);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgumentExceptionOnInvalidPartOfDelimiter() {
+        stringCalculator.add("//[**]\n1**2*;3");
     }
 
 }
