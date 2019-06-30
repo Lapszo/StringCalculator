@@ -47,7 +47,7 @@ public class StringCalculator {
     }
 
     private List<String> getNumbers(String text) {
-        String delimiters = getDelimiters(text);
+        String delimiters = getDelimiters();
         return separateNumbers(text, delimiters);
     }
 
@@ -58,7 +58,7 @@ public class StringCalculator {
         return asList(text.split(delimiters));
     }
 
-    private String getDelimiters(String text) {
+    private String getDelimiters() {
         String delimiters;
         if (validDelimiters) {
             String customDelimiters = delimitersMatcher.group(1);
