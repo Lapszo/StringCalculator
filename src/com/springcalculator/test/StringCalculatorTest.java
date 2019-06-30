@@ -92,4 +92,10 @@ public class StringCalculatorTest {
         stringCalculator.add("//[**]\n1**2*;3");
     }
 
+    @Test
+    public void shouldReturnSumOnMultipleSingleCharacterDelimiters() {
+        assertThat(stringCalculator.add("//[*][;]\n1*2;3")).isEqualTo(6);
+    }
+
+
 }

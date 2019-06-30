@@ -8,17 +8,23 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
 
 public class StringCalculator {
-    private static final String START_OF_SQUARE_BRACKET = "\\[";
+
+    private static final String DIVIDER_DELIMITER = "|";
+    private static final String END_OF_SQUARE_BRACKET = "]";
+    private static final String DIVIDER_DELIMITER_ESCAPED_CHAR = "\\|";
+    private static final String START_OF_SQUARE_BRACKET_ESCAPED_CHAR = "\\[";
     private static final String EMPTY_STRING = "";
     private static final int START_INDEX = 3;
-    private Pattern DelimitersValidator = Pattern.compile("//(\\[(\\D+)])+\n(.*)");
-    private Matcher DelimitersMatcher;
+    private Pattern delimitersValidator = Pattern.compile("//(\\[(\\D+)])+\n(.*)");
+    private Matcher delimitersMatcher;
     private int startIndex;
+    private boolean validDelimiters;
 
     public int add(String numbers) {
         if(numbers.isEmpty()) {
             return 0;
         } else {
+            validDelimiters = areDelimitersValid(numbers);
             List<String> numbersList = getNumbers(numbers);
             checkNegativeNumbers(numbersList);
             return sum(numbersList);
@@ -46,38 +52,41 @@ public class StringCalculator {
     }
 
     private List<String> separateNumbers(String text, String delimiters) {
-        if (isDelimiterValid(text)) {
+        if (validDelimiters) {
             text = text.substring(startIndex);
         }
         return asList(text.split(delimiters));
     }
 
-    private String getDelimiters(String string) {
+    private String getDelimiters(String text) {
         String delimiters;
-        if (isDelimiterValid(string)) {
-            String customDelimiter = DelimitersMatcher.group(1);
-            setStartIndex(customDelimiter);
-            String removeSquareBracket = removeBracket(customDelimiter);
-            delimiters = Pattern.quote(removeSquareBracket);
+        if (validDelimiters) {
+            String customDelimiters = delimitersMatcher.group(1);
+            startIndex = customDelimiters.length() + START_INDEX;
+            delimiters  = getAllCharacters(customDelimiters);
         } else {
             delimiters = ",|\n";
         }
         return delimiters;
     }
 
-    private void setStartIndex(String customDelimiter) {
-        startIndex = customDelimiter.length() + START_INDEX;
+    private String getAllCharacters(String customDelimiter) {
+        String removeSquareBracket = removeBrackets(customDelimiter);
+        return Pattern.compile(DIVIDER_DELIMITER_ESCAPED_CHAR)
+                .splitAsStream(removeSquareBracket)
+                .map(Pattern::quote)
+                .collect(joining(DIVIDER_DELIMITER));
     }
 
-    private String removeBracket(String customDelimiter) {
-        return customDelimiter
-                        .replaceAll(START_OF_SQUARE_BRACKET, EMPTY_STRING)
-                        .replaceAll("]", EMPTY_STRING);
+    private String removeBrackets(String customDelimiters) {
+        return customDelimiters.replaceFirst(START_OF_SQUARE_BRACKET_ESCAPED_CHAR, EMPTY_STRING)
+                        .replaceAll(START_OF_SQUARE_BRACKET_ESCAPED_CHAR, DIVIDER_DELIMITER)
+                        .replaceAll(END_OF_SQUARE_BRACKET , EMPTY_STRING);
     }
 
-    private boolean isDelimiterValid(String string) {
-        DelimitersMatcher = DelimitersValidator.matcher(string);
-        return DelimitersMatcher.matches();
+    private boolean areDelimitersValid(String text) {
+        delimitersMatcher = delimitersValidator.matcher(text);
+        return delimitersMatcher.matches();
     }
 
 }
